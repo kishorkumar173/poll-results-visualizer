@@ -24,9 +24,21 @@ uploaded_file = st.file_uploader("Upload CSV File", type=["csv"])
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
+
+    # Fix column names (IMPORTANT)
+    df.columns = df.columns.str.strip()
+    df.columns = df.columns.str.title()
+
 else:
     st.warning("⚠️ Please upload a CSV file to continue")
     st.stop()
+    
+required_cols = ["Product", "Region", "Rating", "Recommend"]
+
+for col in required_cols:
+    if col not in df.columns:
+        st.error(f"Missing column: {col}")
+        st.stop()
 
 # -------------------------------
 # DATA PREVIEW
